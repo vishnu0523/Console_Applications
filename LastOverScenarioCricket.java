@@ -25,13 +25,14 @@ public class LastOverScenarioCricket {
         int teamScore = 0;
         int wickets = 0;
         int maxWickets = 2;
-        int ballsLeft = 6;
 
         String striker = "MS Dhoni";
         String nonStriker = "Virat Kohli";
 
         int dhoniRuns = 0, dhoniBalls = 0;
         int kohliRuns = 0, kohliBalls = 0;
+
+        int ballsBowled = 0;
 
         System.out.println("========================================");
         System.out.println("FINAL OVER STARTS NOW");
@@ -42,12 +43,13 @@ public class LastOverScenarioCricket {
         System.out.println("========================================\n");
 
         for (int ball = 1; ball <= 6; ball++) {
-            ballsLeft = 7 - ball;
+            int ballsLeft = 6 - (ball - 1);
             int required = target - teamScore;
 
             if (required <= 0) break;
+
             if (wickets == maxWickets) {
-                System.out.println("India is all out. Match over.");
+                System.out.println("India have lost " + maxWickets + " wicket(s) in this scenario. Match over.");
                 break;
             }
 
@@ -80,6 +82,7 @@ public class LastOverScenarioCricket {
 
             BallOutcome result = resolveBall(striker, shotChoice, ballType, required, ballsLeft);
 
+            ballsBowled++;
             if (striker.equals("MS Dhoni")) dhoniBalls++;
             else kohliBalls++;
 
@@ -116,11 +119,10 @@ public class LastOverScenarioCricket {
             } else if (!result.isWicket && result.runs == 4) {
                 printBigMoment("FOUR");
             }
+
+            int needNow = Math.max(0, target - teamScore);
             System.out.println("Score: " + teamScore + "/" + wickets + " after " + ball + " ball(s)");
-            System.out.println("TARGET: " + target + " | NEED: " + Math.max(0, target - teamScore));
-            System.out.println("====================================");
-            System.out.println("   REQUIRED RUNS: " + Math.max(0, target - teamScore));
-            System.out.println("====================================");
+            System.out.println("TARGET: " + target + " | NEED: " + needNow);
             System.out.println();
         }
 
@@ -128,7 +130,7 @@ public class LastOverScenarioCricket {
         System.out.println("========================================");
         System.out.println("          FINAL SCORECARD");
         System.out.println("========================================");
-        System.out.println("India scored: " + teamScore + "/" + wickets + " in 1 over");
+        System.out.println("India scored: " + teamScore + "/" + wickets + " in " + ballsBowled + " ball(s)");
         System.out.println("MS Dhoni : " + dhoniRuns + " (" + dhoniBalls + ")");
         System.out.println("Virat Kohli : " + kohliRuns + " (" + kohliBalls + ")");
         System.out.println("Target was : " + target);
@@ -137,7 +139,7 @@ public class LastOverScenarioCricket {
         if (teamScore >= target) {
             System.out.println("INDIA WINS!");
             if (teamScore == target) {
-                System.out.println("They got there exactly on the final over.");
+                System.out.println("They got there exactly in the final over.");
             } else {
                 System.out.println("MSD and VK pull off another iconic chase!");
             }
@@ -167,10 +169,10 @@ public class LastOverScenarioCricket {
                     : new BallOutcome(randomChance(50) ? 1 : 6, false, "Dhoni waits... and launches!");
         }
 
-        if (shot == 1) return pickOutcome(new int[]{0,1,1,1,2,-1}, strikerLine(1));
-        if (shot == 2) return pickOutcome(new int[]{1,2,2,2,3,-1}, strikerLine(2));
-        if (shot == 3) return pickOutcome(new int[]{0,2,4,4,1,-1}, strikerLine(3));
-        return pickOutcome(new int[]{0,1,2,4,6,-1}, strikerLine(4));
+        if (shot == 1) return pickOutcome(new int[]{0, 1, 1, 1, 2, -1}, strikerLine(1));
+        if (shot == 2) return pickOutcome(new int[]{1, 2, 2, 2, 3, -1}, strikerLine(2));
+        if (shot == 3) return pickOutcome(new int[]{0, 2, 4, 4, 1, -1}, strikerLine(3));
+        return pickOutcome(new int[]{0, 1, 2, 4, 6, -1}, strikerLine(4));
     }
 
     static BallOutcome kohliOutcome(int shot, int ballType, int required, int ballsLeft) {
@@ -180,10 +182,10 @@ public class LastOverScenarioCricket {
                     : new BallOutcome(randomChance(50) ? 1 : 2, false, "Kohli squeezes it somehow.");
         }
 
-        if (shot == 1) return pickOutcome(new int[]{0,1,1,1,2,-1}, kohliLine(1));
-        if (shot == 2) return pickOutcome(new int[]{1,2,2,3,0,-1}, kohliLine(2));
-        if (shot == 3) return pickOutcome(new int[]{1,2,4,4,0,-1}, kohliLine(3));
-        return pickOutcome(new int[]{0,1,2,4,6,-1}, kohliLine(4));
+        if (shot == 1) return pickOutcome(new int[]{0, 1, 1, 1, 2, -1}, kohliLine(1));
+        if (shot == 2) return pickOutcome(new int[]{1, 2, 2, 3, 0, -1}, kohliLine(2));
+        if (shot == 3) return pickOutcome(new int[]{1, 2, 4, 4, 0, -1}, kohliLine(3));
+        return pickOutcome(new int[]{0, 1, 2, 4, 6, -1}, kohliLine(4));
     }
 
     static BallOutcome pickOutcome(int[] arr, String line) {
@@ -247,12 +249,12 @@ public class LastOverScenarioCricket {
             System.out.println("╚███╔███╔╝██║╚██████╗██║  ██╗███████╗   ██║   ");
             System.out.println(" ╚══╝╚══╝ ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ");
         } else if (text.equals("SCORECARD")) {
-            System.out.println("███████╗ ██████╗ ██████╗ ██████╗ ███████╗ ██████╗ █████╗ ██████╗ ██████╗ ");
+            System.out.println("███████╗ ██████╗ ██████╗ ██████╗ ███████╗ ██████╗ █████╗ ██████╗ ██████╗");
             System.out.println("██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗");
             System.out.println("███████╗██║     ██║   ██║██████╔╝█████╗  ██║     ███████║██████╔╝██║  ██║");
             System.out.println("╚════██║██║     ██║   ██║██╔══██╗██╔══╝  ██║     ██╔══██║██╔══██╗██║  ██║");
             System.out.println("███████║╚██████╗╚██████╔╝██║  ██║███████╗╚██████╗██║  ██║██║  ██║██████╔╝");
-            System.out.println("╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ");
+            System.out.println("╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝");
         }
         System.out.println();
     }
@@ -280,4 +282,3 @@ public class LastOverScenarioCricket {
             this.commentary = commentary;
         }
     }
-}
